@@ -35,7 +35,7 @@ $ yarn install
 ## Running the app
 
 ```bash
-# run localhost:3000
+# run localhost:4002
 # development
 $ yarn run start
 
@@ -68,6 +68,7 @@ install sqlite extensions
 # open database vscode
 go to View → Command Palette → choose SQLite: open database
 ```
+
 ![alt text](./assest/images/sqlite-db.png)
 
 ## Requirement
