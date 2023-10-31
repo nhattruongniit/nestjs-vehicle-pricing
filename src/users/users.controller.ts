@@ -8,10 +8,11 @@ import {
   Param,
   Query,
   NotFoundException,
-  // UseInterceptors,
 } from '@nestjs/common';
 
+// services
 import { UsersService } from './users.service';
+import { AuthService } from './auth.service';
 
 // dto
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -27,11 +28,15 @@ import {
 @Controller('auth')
 @Serialize(UserDto) // want to apply this to all routes
 export class UsersController {
-  constructor(private usersSerivce: UsersService) {}
+  constructor(
+    private usersSerivce: UsersService,
+    private authService: AuthService,
+  ) {}
 
   @Post('/signup')
   createUser(@Body() body: CreateUserDto) {
-    this.usersSerivce.create(body.email, body.password);
+    // this.usersSerivce.create(body.email, body.password);
+    return this.authService.signup(body.email, body.password);
   }
 
   // @UseInterceptors(new SerializeInterceptor(UserDto))
