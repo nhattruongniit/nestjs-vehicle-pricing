@@ -20,6 +20,9 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
 
+// decorators
+import { CurrentUser } from './decorators/current-user.decorator';
+
 // interceptor
 import {
   Serialize,
@@ -33,6 +36,21 @@ export class UsersController {
     private usersSerivce: UsersService,
     private authService: AuthService,
   ) {}
+
+  // @Get('whoami')
+  // whoAmI(@Session() session: any) {
+  //   return this.usersSerivce.findOne(session.userId);
+  // }
+
+  @Get('whoami')
+  whoAmI(@CurrentUser() user: string) {
+    return user;
+  }
+
+  @Post('signout')
+  signout(@Session() session: any) {
+    session.userId = null;
+  }
 
   @Post('/signup')
   async createUser(@Body() body: CreateUserDto, @Session() session: any) {
