@@ -9,7 +9,12 @@ import {
   Query,
   NotFoundException,
   Session,
+  UseGuards,
+  // UseInterceptors,
 } from '@nestjs/common';
+
+// guard
+import { AuthGuard } from '../guards/auth.guard';
 
 // services
 import { UsersService } from './users.service';
@@ -28,22 +33,28 @@ import {
   Serialize,
   // SerializeInterceptor,
 } from '../interceptors/serialize.interceptor';
+// import { CurrentUserInterceptor } from './interceptors/curent-user.interceptor';
+
+// entity
+import { User } from './users.entity';
 
 @Controller('auth')
 @Serialize(UserDto) // want to apply this to all routes
+// @UseInterceptors(CurrentUserInterceptor) // use interceptor just apply for 1 route
 export class UsersController {
   constructor(
     private usersSerivce: UsersService,
     private authService: AuthService,
   ) {}
 
-  // @Get('whoami')
+  // @Get('whoami') // normal way
   // whoAmI(@Session() session: any) {
   //   return this.usersSerivce.findOne(session.userId);
   // }
 
-  @Get('whoami')
-  whoAmI(@CurrentUser() user: string) {
+  @Get('whoami') // using custom decorator
+  @UseGuards(AuthGuard) // using guard
+  whoAmI(@CurrentUser() user: User) {
     return user;
   }
 
