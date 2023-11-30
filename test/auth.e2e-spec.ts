@@ -1,11 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { setupApp } from './../src/setup-app';
-
 import { AppModule } from './../src/app.module';
 
-describe('Authentication (e2e)', () => {
+describe('Authentication System', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -14,15 +12,15 @@ describe('Authentication (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    setupApp(app);
     await app.init();
   });
 
-  it('handles a sigup request', () => {
-    const email = 'tony@asdf.com';
+  it('handles a signup request', () => {
+    const email = 'asdlkjq432@akl.com';
+
     return request(app.getHttpServer())
       .post('/auth/signup')
-      .send({ email, password: 'asdf' })
+      .send({ email, password: 'alskdfjl' })
       .expect(201)
       .then((res) => {
         const { id, email } = res.body;
