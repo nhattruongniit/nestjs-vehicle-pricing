@@ -24,14 +24,14 @@ export class CreateReportDto {
   @Max(1000000)
   price: number;
 
-  // @IsNumber()
-  // @Min(0)
-  // @Max(1000000)
-  // mileage: number;
+  @IsNumber()
+  @Min(0)
+  @Max(1000000)
+  mileage: number;
 
-  // @IsLongitude()
-  // lng: number;
+  @IsLongitude()
+  lng: number;
 
-  // @IsLatitude()
-  // lat: number;
+  @IsLatitude()
+  lat: number;
 }
