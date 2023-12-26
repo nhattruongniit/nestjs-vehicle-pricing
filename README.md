@@ -9,6 +9,10 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Extensions
+
+- REST Client extension vscode
+
 ## Installation
 
 ```bash
