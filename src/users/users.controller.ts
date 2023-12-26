@@ -3,69 +3,45 @@ import {
   Controller,
   Post,
   Get,
-  Delete,
   Patch,
+  Delete,
   Param,
   Query,
   NotFoundException,
   Session,
   UseGuards,
-  // UseInterceptors,
 } from '@nestjs/common';
-
-// guard
-import { AuthGuard } from '../guards/auth.guard';
-
-// services
-import { UsersService } from './users.service';
-import { AuthService } from './auth.service';
-
-// dto
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { UsersService } from './users.service';
+import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
-
-// decorators
+import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
-
-// interceptor
-import {
-  Serialize,
-  // SerializeInterceptor,
-} from '../interceptors/serialize.interceptor';
-// import { CurrentUserInterceptor } from './interceptors/curent-user.interceptor';
-
-// entity
-import { User } from './users.entity';
+import { User } from './user.entity';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('auth')
-@Serialize(UserDto) // want to apply this to all routes
-// @UseInterceptors(CurrentUserInterceptor) // use interceptor just apply for 1 route
+@Serialize(UserDto)
 export class UsersController {
   constructor(
-    private usersSerivce: UsersService,
+    private usersService: UsersService,
     private authService: AuthService,
   ) {}
 
-  // @Get('whoami') // normal way
-  // whoAmI(@Session() session: any) {
-  //   return this.usersSerivce.findOne(session.userId);
-  // }
-
-  @Get('whoami') // using custom decorator
-  @UseGuards(AuthGuard) // using guard
+  @Get('/whoami')
+  @UseGuards(AuthGuard)
   whoAmI(@CurrentUser() user: User) {
     return user;
   }
 
-  @Post('signout')
-  signout(@Session() session: any) {
+  @Post('/signout')
+  signOut(@Session() session: any) {
     session.userId = null;
   }
 
   @Post('/signup')
   async createUser(@Body() body: CreateUserDto, @Session() session: any) {
-    // this.usersSerivce.create(body.email, body.password);
     const user = await this.authService.signup(body.email, body.password);
     session.userId = user.id;
     return user;
@@ -78,11 +54,9 @@ export class UsersController {
     return user;
   }
 
-  // @UseInterceptors(new SerializeInterceptor(UserDto))
-  // @Serialize(UserDto) // just apply this to this route
   @Get('/:id')
   async findUser(@Param('id') id: string) {
-    const user = await this.usersSerivce.findOne(parseInt(id));
+    const user = await this.usersService.findOne(parseInt(id));
     if (!user) {
       throw new NotFoundException('user not found');
     }
@@ -90,17 +64,17 @@ export class UsersController {
   }
 
   @Get()
-  findAlluser(@Query('email') email: string) {
-    return this.usersSerivce.find(email);
+  findAllUsers(@Query('email') email: string) {
+    return this.usersService.find(email);
   }
 
   @Delete('/:id')
   removeUser(@Param('id') id: string) {
-    return this.usersSerivce.remove(parseInt(id));
+    return this.usersService.remove(parseInt(id));
   }
 
   @Patch('/:id')
   updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    return this.usersSerivce.update(parseInt(id), body);
+    return this.usersService.update(parseInt(id), body);
   }
 }

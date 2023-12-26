@@ -1,24 +1,17 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-
-//dto
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { CreateReportDto } from './dtos/create-report.dto';
-
-// services
 import { ReportsService } from './reports.service';
-
-// auth
-// import { AuthGuard } from 'src/guards/auth.guard';
-import { CurrentUser } from 'src/users/decorators/current-user.decorator';
-import { User } from 'src/users/users.entity';
+import { AuthGuard } from '../guards/auth.guard';
+import { CurrentUser } from '../users/decorators/current-user.decorator';
+import { User } from '../users/user.entity';
 
 @Controller('reports')
 export class ReportsController {
-  constructor(private reportService: ReportsService) {}
+  constructor(private reportsService: ReportsService) {}
 
   @Post()
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   createReport(@Body() body: CreateReportDto, @CurrentUser() user: User) {
-    console.log(user);
-    // return this.reportService.create(body, user);
+    return this.reportsService.create(body, user);
   }
 }

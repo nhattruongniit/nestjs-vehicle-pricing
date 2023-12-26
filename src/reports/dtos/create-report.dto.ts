@@ -22,11 +22,6 @@ export class CreateReportDto {
   @IsNumber()
   @Min(0)
   @Max(1000000)
-  price: number;
-
-  @IsNumber()
-  @Min(0)
-  @Max(1000000)
   mileage: number;
 
   @IsLongitude()
@@ -34,4 +29,9 @@ export class CreateReportDto {
 
   @IsLatitude()
   lat: number;
+
+  @IsNumber()
+  @Min(0)
+  @Max(1000000)
+  price: number;
 }

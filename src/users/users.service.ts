@@ -1,8 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-
-import { User } from './users.entity';
+import { User } from './user.entity';
 
 @Injectable()
 export class UsersService {
@@ -30,9 +29,8 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('user not found');
     }
-
-    const userUpdated = Object.assign(user, attrs);
-    return this.repo.save(userUpdated);
+    Object.assign(user, attrs);
+    return this.repo.save(user);
   }
 
   async remove(id: number) {
@@ -40,7 +38,6 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('user not found');
     }
-
     return this.repo.remove(user);
   }
 }

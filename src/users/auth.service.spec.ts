@@ -1,16 +1,16 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
 
+import { Test } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from './users.service';
-import { User } from './users.entity';
+import { User } from './user.entity';
 
 describe('AuthService', () => {
   let service: AuthService;
   let fakeUsersService: Partial<UsersService>;
 
   beforeEach(async () => {
-    // create a fake copy of the user service
+    // Create a fake copy of the users service
     const users: User[] = [];
     fakeUsersService = {
       find: (email: string) => {
@@ -19,7 +19,7 @@ describe('AuthService', () => {
       },
       create: (email: string, password: string) => {
         const user = {
-          id: Math.floor(Math.random() * 9999),
+          id: Math.floor(Math.random() * 999999),
           email,
           password,
         } as User;
@@ -45,10 +45,10 @@ describe('AuthService', () => {
     expect(service).toBeDefined();
   });
 
-  it('create a new user with a salted and hashed password', async () => {
-    const user = await service.signup('das@gmail.com', 'dqw');
+  it('creates a new user with a salted and hashed password', async () => {
+    const user = await service.signup('asdf@asdf.com', 'asdf');
 
-    expect(user.password).not.toEqual('dqw');
+    expect(user.password).not.toEqual('asdf');
     const [salt, hash] = user.password.split('.');
     expect(salt).toBeDefined();
     expect(hash).toBeDefined();
@@ -68,7 +68,7 @@ describe('AuthService', () => {
   });
 
   it('throws if an invalid password is provided', async () => {
-    await service.signup('laskdjf@alskdfj.com', 'passowrd');
+    await service.signup('laskdjf@alskdfj.com', 'password');
     await expect(
       service.signin('laskdjf@alskdfj.com', 'laksdlfkj'),
     ).rejects.toThrow(BadRequestException);
@@ -76,6 +76,7 @@ describe('AuthService', () => {
 
   it('returns a user if correct password is provided', async () => {
     await service.signup('asdf@asdf.com', 'mypassword');
+
     const user = await service.signin('asdf@asdf.com', 'mypassword');
     expect(user).toBeDefined();
   });

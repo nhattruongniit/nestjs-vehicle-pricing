@@ -1,8 +1,0 @@
-POST http://localhost:4002/auth/signup
-content-type: application/json
-
-{
-  "email": "truong@amanotes.com",
-  "password": "123456"
-}
-
