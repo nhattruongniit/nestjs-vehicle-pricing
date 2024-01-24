@@ -15,7 +15,15 @@ export class ReportsService {
       .createQueryBuilder()
       .select('*')
       .where('make = :make', { make: estimateDto.make })
-      .getRawMany();
+      .andWhere('model = :model', { model: estimateDto.model })
+      .andWhere('lng - :lng BETWEEN -5 AND 5', { lng: estimateDto.lng })
+      .andWhere('lat - :lat BETWEEN -5 AND 5', { lat: estimateDto.lat })
+      .andWhere('year - :year BETWEEN -3 AND 3', { year: estimateDto.year })
+      .andWhere('approved IS TRUE')
+      .orderBy('ABS(mileage - :mileage)', 'DESC')
+      .setParameter('mileage', estimateDto.mileage)
+      .limit(3)
+      .getRawOne();
   }
 
   create(reportDto: CreateReportDto, user: User) {
